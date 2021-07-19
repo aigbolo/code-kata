@@ -23,29 +23,6 @@ describe('bean goods', () => {
   );
   describe('get discount', () => {
     it.each`
-      orderAmountUnit | expectedAvailableDiscount
-      ${1}            | ${0}
-      ${3}            | ${1}
-      ${6}            | ${2}
-    `(
-      `should return $expectedTotalDiscount for available unit discount when customer buy bean $orderAmountUnit pound`,
-      ({ orderAmountUnit, expectedAvailableDiscount }) => {
-        // Arrange
-        const bean = new Bean();
-        bean.pricePerUnit = 0;
-        bean.unitKind = UnitKind.POUND;
-        bean.discountEveryUnit = 3;
-        bean.discountUnit = 1;
-
-        // Action
-        const actualDiscount = bean.getDiscountTicketUnit(orderAmountUnit);
-
-        // Assert
-        expect(actualDiscount).toBe(expectedAvailableDiscount);
-      },
-    );
-
-    it.each`
       pricePerUnit | orderAmountUnit | expectedTotalDiscount
       ${0.65}      | ${2}            | ${0}
       ${0.65}      | ${3}            | ${0}
