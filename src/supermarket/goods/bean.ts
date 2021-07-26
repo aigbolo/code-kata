@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { GoodsFactory, UnitKind } from './goods-factory';
 import { DiscountCampaign, GoodsStrategy } from './goods-strategy';
 
@@ -9,17 +10,15 @@ export class Bean implements GoodsFactory, GoodsStrategy, DiscountCampaign {
   discountUnit = 1;
 
   getDiscountAmount(orderUnitAmount: number): number {
-    let discountTickets = 0;
-    for (let order = 1; order <= orderUnitAmount; order++) {
-      if (order % this.discountEveryUnit === 0) {
-        discountTickets++;
-        if (discountTickets + order > orderUnitAmount) {
-          return (discountTickets - 1) * this.pricePerUnit;
-        }
-      }
-    }
+    const discountEveryUnit = this.discountEveryUnit + 1;
 
-    return discountTickets * this.pricePerUnit;
+    const currentOrder = (index: number) => index + 1;
+    const isDiscountItem = (order: number) => order % discountEveryUnit === 0;
+    const totalDiscountItem = _.range(orderUnitAmount).filter((order) =>
+      isDiscountItem(currentOrder(order)),
+    ).length;
+
+    return _.multiply(totalDiscountItem, this.pricePerUnit);
   }
 
   totalPrice(orderUnitAmount: number): number {
